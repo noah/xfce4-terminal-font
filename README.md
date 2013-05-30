@@ -10,3 +10,13 @@ No thanks to `urxvt-unicode` for not supporting fontconfig, which is
 necessary to run an unpatched Monaco font in Powerline, which I *must*
 have, all of which prompted my switch to xfce4-terminal which *does*
 support fontconfig and ... oh, nevermind.
+
+To use it,
+
+    % ./xfce4-terminal +
+    % ./xfce4-terminal -
+
+In Awesome,
+
+    awful.key({ "Control", "Shift" }, "Up", function () awful.util.spawn(script_dir .. "/xfce4-terminal-font +", false)end),
+    awful.key({ "Control", "Shift" }, "Down", function () awful.util.spawn(script_dir .. "/xfce4-terminal-font -", false)end), })})
