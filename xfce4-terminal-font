@@ -37,8 +37,8 @@ if __name__ == "__main__":
     c.optionxform = str # make keys case-sensitive
     c.read(f)
     font, size = c.get('Configuration', 'FontName').split()
-    size = int(size) + delta
-    c['Configuration']['FontName'] = "{0} {1}".format(font, size)
+    size = float(size) + delta
+    c.set('Configuration', 'FontName', "{0} {1}".format(font, size))
 
     with open(f, 'w') as c_new:
         c.write(c_new)
