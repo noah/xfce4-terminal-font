@@ -22,7 +22,10 @@ if __name__ == "__main__":
 
     import os
     import re
-    from configparser import RawConfigParser
+    try:
+        from configparser import RawConfigParser  # python3
+    except ImportError:
+        from ConfigParser import RawConfigParser  # python2
 
     # read input file
     f = os.path.join(os.environ["XDG_CONFIG_HOME"], "xfce4", "terminal", "terminalrc")
