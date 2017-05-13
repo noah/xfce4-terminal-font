@@ -21,7 +21,6 @@ if __name__ == "__main__":
     delta = int("{0}1".format(sys.argv[1]))
 
     import os
-    import re
     try:
         from configparser import RawConfigParser  # python3
     except ImportError:
@@ -37,7 +36,7 @@ if __name__ == "__main__":
     c = RawConfigParser()
     c.optionxform = str # make keys case-sensitive
     c.read(f)
-    font, size = re.search(r'^(.*) (\d+)$', c['Configuration']['FontName']).group(1, 2)
+    font, size = c.get('Configuration', 'FontName').split()
     size = int(size) + delta
     c['Configuration']['FontName'] = "{0} {1}".format(font, size)
 
