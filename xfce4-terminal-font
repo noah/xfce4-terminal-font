@@ -28,7 +28,12 @@ if __name__ == "__main__":
         from ConfigParser import RawConfigParser  # python2
 
     # read input file
-    f = os.path.join(os.environ["XDG_CONFIG_HOME"], "xfce4", "terminal", "terminalrc")
+    try:
+        f = os.path.join(os.environ["XDG_CONFIG_HOME"], "xfce4", "terminal", "terminalrc")
+    except KeyError:
+        # XDG_CONFIG_HOME environment variable not defined
+        f = os.path.join(os.environ["HOME"], ".config", "xfce4", "terminal", "terminalrc")
+
     c = RawConfigParser()
     c.optionxform = str # make keys case-sensitive
     c.read(f)
