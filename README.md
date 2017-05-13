@@ -15,6 +15,9 @@ To use it,
 
     % ./xfce4-terminal +
     % ./xfce4-terminal -
+    % ./xfce4-terminal
+    12
+    % ./xfce4-terminal 7.5
 
 In Awesome,
 

@@ -9,7 +9,8 @@
 #
 # License: GPLv2 or later.
 
-from sys import argv
+from __future__ import print_function
+from sys import argv, exit
 import os
 try:
     from configparser import RawConfigParser  # python3
@@ -18,11 +19,6 @@ except ImportError:
 
 
 if __name__ == '__main__':
-    if len(argv) != 2 or argv[1] not in ['+', '-']:
-        exit('Usage {} +/-'.format(argv[0]))
-
-    delta = int('{}1'.format(argv[1]))
-
     try:
         config_root = os.environ['XDG_CONFIG_HOME']
     except KeyError:
@@ -36,7 +32,21 @@ if __name__ == '__main__':
 
     font, size = config.get('Configuration', 'FontName').split()
 
-    new_size = float(size) + delta
+    if len(argv) == 1:
+        print(size)
+        exit(0)
+
+    elif argv[1] in ['+', '-']:
+        delta = int('{}1'.format(argv[1]))
+        new_size = float(size) + delta
+
+    else:
+        try:
+            new_size = float(argv[1])
+        except ValueError:
+            print('Invalid size', argv[1])
+            exit(1)
+
     config.set('Configuration', 'FontName', '{} {}'.format(font, new_size))
 
     with open(config_file, 'w') as f:
