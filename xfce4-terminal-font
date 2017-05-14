@@ -5,33 +5,49 @@
 # xfce4-terminal.
 #
 # Copyright © 2013 Noah K. Tilton <noahktilton@gmail.com>
+# Copyright © 2017 Edoardo Negri <edne@gmx.com>
 #
 # License: GPLv2 or later.
 
-# working with xfce4-terminal-0.6.2-1
+from __future__ import print_function
+from sys import argv, exit
+import os
+try:
+    from configparser import RawConfigParser  # python3
+except ImportError:
+    from ConfigParser import RawConfigParser  # python2
 
-if __name__ == "__main__":
 
-    import sys
+if __name__ == '__main__':
+    try:
+        config_root = os.environ['XDG_CONFIG_HOME']
+    except KeyError:
+        config_root = os.path.join(os.environ['HOME'], '.config')
 
-    PM = ["+", "-"]
-    if len(sys.argv) != 2 or sys.argv[1] not in PM:
-        sys.exit("Usage {0} {1}".format(sys.argv[0], "/".join(PM)))
+    config_file = os.path.join(config_root, 'xfce4', 'terminal', 'terminalrc')
 
-    delta = int("{0}1".format(sys.argv[1]))
+    config = RawConfigParser()
+    config.optionxform = str  # make keys case-sensitive
+    config.read(config_file)
 
-    import os
-    import re
-    from configparser import RawConfigParser
+    font, size = config.get('Configuration', 'FontName').split()
 
-    # read input file
-    f = os.path.join(os.environ["XDG_CONFIG_HOME"], "xfce4", "terminal", "terminalrc")
-    c = RawConfigParser()
-    c.optionxform = str # make keys case-sensitive
-    c.read(f)
-    font, size = re.search(r'^(.*) (\d+)$', c['Configuration']['FontName']).group(1, 2)
-    size = int(size) + delta
-    c['Configuration']['FontName'] = "{0} {1}".format(font, size)
+    if len(argv) == 1:
+        print(size)
+        exit(0)
 
-    with open(f, 'w') as c_new:
-        c.write(c_new)
+    elif argv[1] in ['+', '-']:
+        delta = int('{}1'.format(argv[1]))
+        new_size = float(size) + delta
+
+    else:
+        try:
+            new_size = float(argv[1])
+        except ValueError:
+            print('Invalid size', argv[1])
+            exit(1)
+
+    config.set('Configuration', 'FontName', '{} {}'.format(font, new_size))
+
+    with open(config_file, 'w') as f:
+        config.write(f)
